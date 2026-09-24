@@ -1,7 +1,7 @@
 services:
-  postgres:
+  postgres-catalog:
     image: postgres:16
-    container_name: ticketflow-postgres
+    container_name: ticketflow-postgres-catalog
     environment:
       POSTGRES_USER: catalog_user
       POSTGRES_PASSWORD: catalog_pass
@@ -9,7 +9,20 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pgdata_catalog:/var/lib/postgresql/data
+
+  postgres-orders:
+    image: postgres:16
+    container_name: ticketflow-postgres-orders
+    environment:
+      POSTGRES_USER: orders_user
+      POSTGRES_PASSWORD: orders_pass
+      POSTGRES_DB: ordersdb
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata_orders:/var/lib/postgresql/data
 
 volumes:
-  pgdata:
+  pgdata_catalog:
+  pgdata_orders:
