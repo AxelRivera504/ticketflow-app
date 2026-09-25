@@ -1,0 +1,36 @@
+.app {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  font-family: sans-serif;
+}
+.event-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+.event-card ul {
+  list-style: none;
+  padding: 0;
+}
+.event-card li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+}
+.order-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border: 1px solid #999;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+.message {
+  background: #eef;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+}
