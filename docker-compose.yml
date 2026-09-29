@@ -10,6 +10,11 @@ services:
       - "5432:5432"
     volumes:
       - pgdata_catalog:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U catalog_user -d catalogdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   postgres-orders:
     image: postgres:16
@@ -22,6 +27,53 @@ services:
       - "5433:5432"
     volumes:
       - pgdata_orders:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U orders_user -d ordersdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  catalog-api:
+    build:
+      context: .
+      dockerfile: src/CatalogApi/Dockerfile
+    container_name: ticketflow-catalog-api
+    ports:
+      - "5165:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__CatalogDb: "Host=postgres-catalog;Port=5432;Database=catalogdb;Username=catalog_user;Password=catalog_pass"
+    depends_on:
+      postgres-catalog:
+        condition: service_healthy
+
+  orders-api:
+    build:
+      context: .
+      dockerfile: src/OrdersApi/Dockerfile
+    container_name: ticketflow-orders-api
+    ports:
+      - "5050:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__OrdersDb: "Host=postgres-orders;Port=5432;Database=ordersdb;Username=orders_user;Password=orders_pass"
+      CatalogApi__BaseUrl: "http://catalog-api:8080"
+    depends_on:
+      postgres-orders:
+        condition: service_healthy
+      catalog-api:
+        condition: service_started
+
+  frontend:
+    build:
+      context: src/frontend
+      dockerfile: Dockerfile
+    container_name: ticketflow-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - catalog-api
+      - orders-api
 
 volumes:
   pgdata_catalog:
