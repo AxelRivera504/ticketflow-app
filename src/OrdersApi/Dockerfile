@@ -10,6 +10,8 @@ RUN dotnet publish src/OrdersApi/OrdersApi.csproj -c Release -o /app/publish --n
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 
+RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/*
+
 RUN adduser --disabled-password --gecos "" appuser
 USER appuser
 

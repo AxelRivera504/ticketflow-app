@@ -1,0 +1,4 @@
+# zlib1g - Debian la marcó como "will_not_fix" en su paquete.
+# La función vulnerable (zipOpenNewFileInZip4_6) no es alcanzable en el contexto
+# de un contenedor runtime de ASP.NET. Riesgo aceptado, revisar si cambia el estado.
+CVE-2023-45853
